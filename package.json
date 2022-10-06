@@ -1,0 +1,17 @@
+{
+  "name": "rabbitmq",
+  "version": "1.0.0",
+  "description": "Implementacion de la cola de mensajes",
+  "main": "producer.js",
+  "scripts": {
+    "start": "nodemon producer.js",
+    "dev": "nodemon consumer.js"
+  },
+  "author": "Nicolas Contreras",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "moment": "^2.29.4",
+    "nodemon": "^2.0.20"
+  }
+}

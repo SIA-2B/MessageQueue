@@ -18,10 +18,10 @@ async function connect(){
 	const queue = 'employees';
 
 	const student = [
-		{"student_id": "1", "carrera": "SISTEMAS Y COMPUTACION", "time": "27/01/2020 21:30 PM"},
-		{"student_id": "2", "carrera": "SISTEMAS Y COMPUTACION", "time": "27/01/2020 21:30 PM"},
-		{"student_id": "3", "carrera": "SISTEMAS Y COMPUTACION", "time": "27/01/2020 21:30 PM"},
-		{"student_id": "4", "carrera": "SISTEMAS Y COMPUTACION", "time": "27/01/2020 21:30 PM"}
+		// {"student_id": "1", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
+		// {"student_id": "2", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
+		// {"student_id": "3", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
+		// {"student_id": "4", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 22:00"}
 	]
 
 	const enterprise = moment().format("DD/MM/YYYY HH:mm A");

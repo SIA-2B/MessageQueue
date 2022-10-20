@@ -1,30 +1,24 @@
 const amqp = require("amqplib");
-const moment = require('moment');
 
 const rabbitSettings = {
 	protocol: 'amqp',
-	hostname: 'localhost',
-	port:5672,
-	username: 'ndcontrerasr',
-	password: "1234",
+	hostname: '34.151.199.132',
+	port: 5672,
+	username: 'grupo-2b',
+	password: "123456789",
 	vhost: '/',
 	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
 }
 
-connect();
+e()
 
-async function connect(){
-	
+async function e(){
+	console.log(await connectP([{"idPersona": "hola camilo"}]));
+}
+async function connectP(persona){
+	console.log('consumir')
 	const queue = 'employees';
-
-	const student = [
-		// {"student_id": "1", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
-		// {"student_id": "2", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
-		// {"student_id": "3", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 21:30"},
-		// {"student_id": "4", "carrera": "SISTEMAS Y COMPUTACION", "time": "15/10/2022 22:00"}
-	]
-
-	const enterprise = moment().format("DD/MM/YYYY HH:mm A");
+	let salida = "false";
 	try {
 		const conn = await amqp.connect(rabbitSettings);
 		console.log('connection created ..');
@@ -35,20 +29,24 @@ async function connect(){
 		const res = await channel.assertQueue(queue);
 		console.log('Queue Created..');
 
-		for(var msg in student) {
-			await channel.sendToQueue(queue, Buffer.from(JSON.stringify(student[msg])));
+		for(var msg in persona) {
+			await channel.sendToQueue(queue, Buffer.from(JSON.stringify(persona[msg])));
 			console.log(`Message sent to queue ${queue}`);
 		}
 		
-		// console.log(`Waiting for messages from ${enterprise}`);
-		// channel.consume(queue, message => {
-		// 	ler employee = JSON.parse(message.content.toString());
-		// 	console.log(`Received employee ${employee.student_id}`);
+		// await channel.consume(queue, message => {
+		// 	let employee = JSON.parse(message.content.toString());
+		// 	// console.log(`Received employee ${employee.student_id}`);
 		// 	console.log(employee);
+		// 	if(employee.idPersona == "7"){
+		// 		salida = employee;
+		// 		channel.ack(message);
+		// 	}
 		// })
-		
+		return salida;
 	} catch(err) {
 		// statements
 		console.error(`Error -> ${err}`);
 	}
+	
 }

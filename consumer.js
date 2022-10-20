@@ -1,23 +1,31 @@
 const amqp = require("amqplib");
-const moment = require('moment');
+// const connect = require("./producer.js");
+
+// const rabbitSettings = {
+// 	protocol: 'amqp',
+// 	hostname: '172.17.0.3',
+// 	port:5672,
+// 	username: 'ndcontrerasr',
+// 	password: "1234",
+// 	vhost: '/',
+// 	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
+// }
 
 const rabbitSettings = {
 	protocol: 'amqp',
-	hostname: 'localhost',
-	port:5672,
-	username: 'ndcontrerasr',
-	password: "1234",
+	hostname: '34.151.199.132',
+	port: 5672,
+	username: 'grupo-2b',
+	password: "123456789",
 	vhost: '/',
 	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
 }
 
-connect();
+connectC();
 
-async function connect(){
+async function connectC(){
 	
 	const queue = 'employees';
-
-	const enterprise = moment().format("DD/MM/YYYY HH:mm");
 
 	try {
 		const conn = await amqp.connect(rabbitSettings);
@@ -29,29 +37,45 @@ async function connect(){
 		const res = await channel.assertQueue(queue);
 		console.log('Queue Created..');
 		
-		channel.consume(queue, message => {
+		await channel.consume(queue, message => {
 			let employee = JSON.parse(message.content.toString());
 			// console.log(`Received employee ${employee.student_id}`);
-			// console.log(employee);
-			const inicio = employee.time.split(" ");
-			var hora = inicio[1].split(":");
-
-			if(hora[1] == '30'){
-				hora[0] = `${parseInt(hora[0])+1}`;
-				hora[1] = '00';
-			}else {hora[1] = '30'}
-			const fin = `${inicio[0]} ${hora[0]}:${hora[1]}`;
-
-			if(employee.time<=enterprise && fin>=enterprise){
-				console.log("id: ", employee.student_id, 
-						", carrera: ", employee.carrera);
-				// channel.ack(message);
-			}
-			else{
-				channel.ack(message);
-				// console.log("deleted");
-			}
+			console.log(employee);
+			const id = employee.idPersona;
+			
+			//Se revisa en la base de datos si el dato existe o no
+			// En esta parte se definira true
+			// El tipo de dato que se envia es 
+			// El dato id debe ser String
+			connectP([{'idPersona': id, 'volver': true}]);
+			channel.ack(message);
 		})
+	} catch(err) {
+		// statements
+		console.error(`Error -> ${err}`);
+	}
+}
+
+async function connectP(persona){
+	
+	const queue = 'direct';
+
+	try {
+		const conn = await amqp.connect(rabbitSettings);
+		console.log('connection created ..');
+
+		const channel = await conn.createChannel();
+		console.log('Channel Created..');
+
+		const res = await channel.assertQueue(queue);
+		console.log('Queue Created..');
+
+		console.log(persona);
+		for(var msg in persona) {
+			await channel.sendToQueue(queue, Buffer.from(JSON.stringify(persona[msg])));
+			console.log(`Message sent to queue ${queue}`);
+		}
+		
 	} catch(err) {
 		// statements
 		console.error(`Error -> ${err}`);

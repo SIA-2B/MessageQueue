@@ -2,38 +2,31 @@ const amqp = require("amqplib");
 const fs = require('fs'); 
 // const jsonData = require('./student.json');
 
-const rabbitSettings = {
-	protocol: 'amqp',
-	hostname: '172.17.0.2',
-	port:5672,
-	username: 'ndcontrerasr',
-	password: "1234",
-	vhost: '/',
-	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
-}
-
 // const rabbitSettings = {
 // 	protocol: 'amqp',
-// 	hostname: '34.151.199.132',
-// 	port: 5672,
-// 	username: 'grupo-2b',
-// 	password: "123456789",
+// 	hostname: '172.17.0.2',
+// 	port:5672,
+// 	username: 'ndcontrerasr',
+// 	password: "1234",
 // 	vhost: '/',
 // 	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
 // }
 
-console.log(connectC());
+const rabbitSettings = {
+	protocol: 'amqp',
+	hostname: '172.17.0.2',
+	port: 5672,
+	username: 'grupo-2b',
+	password: "123456789",
+	vhost: '/',
+	authMechanism: ['PLAIN', 'AMQPLAIN','EXTERNAL']
+}
+
+connectC();
 
 async function connectC(){
 	
 	const queue = 'employees';
-	// console.log(jsonData.volver)
-	// const Save = {"volver":"hola mundo"};
-	// fs.writeFile('student.json', JSON.stringify(Save),'utf8', (err) => { 
-	// 	if (err) throw err; 
-	// 	console.log('The file has been saved!'); 
-	// }); 
-	// return 1;
 
 	try {
 		const conn = await amqp.connect(rabbitSettings);
@@ -48,7 +41,7 @@ async function connectC(){
 		await channel.consume(queue, message => {
 			let employee = JSON.parse(message.content.toString());
 			// console.log(`Received employee ${employee.student_id}`);
-			console.log(employee);
+			// console.log(employee);
 			const id = employee.idPersona;
 			
 			//Se revisa en la base de datos si el dato existe o no
